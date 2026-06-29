@@ -1,0 +1,84 @@
+/* Stili globali dell'app BioQuest */
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #1b4332;
+  background-color: #f8fff8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f8fff8;
+  color: #1b4332;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1b4332;
+}
+
+a {
+  color: #2d6a4f;
+}
+
+a:hover {
+  color: #1b4332;
+}
+
+.btn-primary {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #1b4332;
+  border-color: #1b4332;
+}
+
+.btn-success {
+  background-color: #40916c;
+  border-color: #40916c;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #2d6a4f;
+  border-color: #2d6a4f;
+}
+
+.form-control:focus {
+  border-color: #40916c;
+  box-shadow: 0 0 0 0.25rem rgba(64, 145, 108, 0.25);
+}
+
+.card {
+  border-color: #d8f3dc;
+}
+
+.alert-info {
+  color: #1b4332;
+  background-color: #d8f3dc;
+  border-color: #b7e4c7;
+}
