@@ -185,8 +185,10 @@ async function confirmRemoveFavorite() {
       favoriteId => favoriteId !== id
     )
 
+    removeFavoriteDialogOpen.value = false
+    favoriteToRemove.value = null
+
     showToast('Specie rimossa dai preferiti.', 'success')
-    closeRemoveFavoriteDialog()
   } catch (error) {
     showToast('Errore durante la rimozione dai preferiti.', 'error')
   } finally {
