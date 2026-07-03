@@ -2,12 +2,63 @@
 
 :root {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1b4332;
-  background-color: #f8fff8;
+
+  --bioquest-bg: #f8fff8;
+  --bioquest-surface: #ffffff;
+  --bioquest-surface-soft: #f8fff8;
+  --bioquest-surface-muted: #edfdf2;
+
+  --bioquest-text: #1b4332;
+  --bioquest-heading: #1b4332;
+  --bioquest-muted: #6c757d;
+
+  --bioquest-primary: #00bd7e;
+  --bioquest-primary-soft: rgba(0, 189, 126, 0.14);
+  --bioquest-primary-medium: #40916c;
+  --bioquest-primary-dark: #1b4332;
+
+  --bioquest-border: #d8f3dc;
+  --bioquest-border-soft: rgba(0, 189, 126, 0.16);
+  --bioquest-border-strong: rgba(0, 189, 126, 0.32);
+
+  --bioquest-danger: #dc3545;
+
+  --bs-secondary-color: var(--bioquest-muted);
+  --bs-border-color: var(--bioquest-border);
+  --bs-box-shadow-sm: 0 0.35rem 1rem rgba(0, 0, 0, 0.06);
+  --bs-light-rgb: 248, 255, 248;
+
+  color: var(--bioquest-text);
+  background-color: var(--bioquest-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme='dark'] {
+  --bioquest-bg: #0b120f;
+  --bioquest-surface: #16211d;
+  --bioquest-surface-soft: #101a16;
+  --bioquest-surface-muted: #203129;
+
+  --bioquest-text: #edf8f3;
+  --bioquest-heading: #ffffff;
+  --bioquest-muted: #c7d8d0;
+
+  --bioquest-primary: #00d991;
+  --bioquest-primary-soft: rgba(0, 217, 145, 0.18);
+  --bioquest-primary-medium: #62d6a2;
+  --bioquest-primary-dark: #dff8ec;
+
+  --bioquest-border: rgba(0, 217, 145, 0.28);
+  --bioquest-border-soft: rgba(0, 217, 145, 0.2);
+  --bioquest-border-strong: rgba(0, 217, 145, 0.48);
+
+  --bs-secondary-color: var(--bioquest-muted);
+  --bs-border-color: var(--bioquest-border);
+  --bs-box-shadow-sm: 0 0.55rem 1.4rem rgba(0, 0, 0, 0.32);
+  --bs-light-rgb: 16, 26, 22;
 }
 
 * {
@@ -16,17 +67,27 @@
 
 html {
   min-height: 100%;
+  background-color: var(--bioquest-bg);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  background-color: #f8fff8;
-  color: #1b4332;
+  background-color: var(--bioquest-bg);
+  color: var(--bioquest-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 #app {
   min-height: 100vh;
+  background-color: var(--bioquest-bg);
+}
+
+main {
+  background-color: var(--bioquest-bg);
+  color: var(--bioquest-text);
 }
 
 h1,
@@ -35,15 +96,83 @@ h3,
 h4,
 h5,
 h6 {
-  color: #1b4332;
+  color: var(--bioquest-heading);
+}
+
+p,
+span,
+li,
+dt,
+dd,
+label,
+small,
+strong {
+  color: inherit;
 }
 
 a {
-  color: #2d6a4f;
+  color: var(--bioquest-primary-medium);
 }
 
 a:hover {
-  color: #1b4332;
+  color: var(--bioquest-primary-dark);
+}
+
+.card {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.card-body {
+  color: var(--bioquest-text);
+}
+
+.card-header,
+.card-footer {
+  background-color: var(--bioquest-surface-soft);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.list-group-item {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.dropdown-menu {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.dropdown-item {
+  color: var(--bioquest-text);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--bioquest-surface-muted);
+  color: var(--bioquest-heading);
+}
+
+.modal-content {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.text-muted {
+  color: var(--bioquest-muted);
+}
+
+.bg-light {
+  background-color: var(--bioquest-surface-soft);
+}
+
+.border {
+  border-color: var(--bioquest-border);
 }
 
 .btn-primary {
@@ -58,8 +187,8 @@ a:hover {
 }
 
 .btn-success {
-  background-color: #40916c;
-  border-color: #40916c;
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
 }
 
 .btn-success:hover,
@@ -68,17 +197,367 @@ a:hover {
   border-color: #2d6a4f;
 }
 
-.form-control:focus {
-  border-color: #40916c;
-  box-shadow: 0 0 0 0.25rem rgba(64, 145, 108, 0.25);
+html[data-theme='dark'] .btn-success {
+  color: #07110d;
+  background-color: var(--bioquest-primary);
+  border-color: var(--bioquest-primary);
 }
 
-.card {
-  border-color: #d8f3dc;
+html[data-theme='dark'] .btn-success:hover,
+html[data-theme='dark'] .btn-success:focus {
+  color: #07110d;
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+}
+
+.btn-outline-success {
+  color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+  color: #ffffff;
+}
+
+html[data-theme='dark'] .btn-outline-success {
+  color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+}
+
+html[data-theme='dark'] .btn-outline-success:hover,
+html[data-theme='dark'] .btn-outline-success:focus {
+  color: #07110d;
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+html[data-theme='dark'] .btn-outline-secondary {
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border-strong);
+}
+
+html[data-theme='dark'] .btn-outline-secondary:hover,
+html[data-theme='dark'] .btn-outline-secondary:focus {
+  background-color: var(--bioquest-surface-muted);
+  color: var(--bioquest-heading);
+}
+
+.form-control,
+.form-select {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+.form-control::placeholder {
+  color: var(--bioquest-muted);
+  opacity: 0.9;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-primary);
+  box-shadow: 0 0 0 0.25rem rgba(0, 189, 126, 0.22);
+}
+
+html[data-theme='dark'] .form-control,
+html[data-theme='dark'] .form-select {
+  background-color: #0d1713;
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border-strong);
+}
+
+html[data-theme='dark'] .form-control::placeholder {
+  color: #9fb4aa;
+  opacity: 1;
+}
+
+html[data-theme='dark'] .form-control:focus,
+html[data-theme='dark'] .form-select:focus {
+  background-color: #0d1713;
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-primary);
+  box-shadow: 0 0 0 0.25rem rgba(0, 217, 145, 0.24);
+}
+
+html[data-theme='dark'] .form-select option {
+  background-color: #0d1713;
+  color: var(--bioquest-text);
 }
 
 .alert-info {
-  color: #1b4332;
-  background-color: #d8f3dc;
-  border-color: #b7e4c7;
+  color: var(--bioquest-primary-dark);
+  background-color: var(--bioquest-primary-soft);
+  border-color: var(--bioquest-border);
+}
+
+html[data-theme='dark'] .alert-info {
+  color: var(--bioquest-heading);
+  background-color: rgba(0, 217, 145, 0.15);
+  border-color: var(--bioquest-border-strong);
+}
+
+.alert-success {
+  color: var(--bioquest-primary-dark);
+  background-color: rgba(0, 189, 126, 0.16);
+  border-color: rgba(0, 189, 126, 0.34);
+}
+
+html[data-theme='dark'] .alert-success {
+  color: var(--bioquest-heading);
+  background-color: rgba(0, 217, 145, 0.15);
+  border-color: rgba(0, 217, 145, 0.38);
+}
+
+.alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
+html[data-theme='dark'] .alert-danger {
+  color: #ffd7dc;
+  background-color: rgba(220, 53, 69, 0.16);
+  border-color: rgba(220, 53, 69, 0.35);
+}
+
+.table {
+  color: var(--bioquest-text);
+}
+
+html[data-theme='dark'] .table {
+  --bs-table-color: var(--bioquest-text);
+  --bs-table-bg: var(--bioquest-surface);
+  --bs-table-border-color: var(--bioquest-border);
+  --bs-table-striped-bg: var(--bioquest-surface-muted);
+  --bs-table-striped-color: var(--bioquest-text);
+  --bs-table-hover-bg: rgba(0, 217, 145, 0.08);
+  --bs-table-hover-color: var(--bioquest-text);
+}
+
+/* Correzioni Bootstrap e componenti globali in tema scuro */
+html[data-theme='dark'] .card,
+html[data-theme='dark'] .card-body,
+html[data-theme='dark'] .card-header,
+html[data-theme='dark'] .card-footer,
+html[data-theme='dark'] .list-group-item,
+html[data-theme='dark'] .dropdown-menu,
+html[data-theme='dark'] .modal-content {
+  color: var(--bioquest-text);
+}
+
+html[data-theme='dark'] .card-title,
+html[data-theme='dark'] .card strong {
+  color: var(--bioquest-heading);
+}
+
+html[data-theme='dark'] .confirm-dialog {
+  color: var(--bioquest-text);
+  background-color: var(--bioquest-surface);
+  border: 1px solid var(--bioquest-border);
+}
+
+html[data-theme='dark'] .confirm-dialog .text-muted {
+  color: var(--bioquest-muted);
+}
+
+html[data-theme='dark'] .confirm-dialog h1,
+html[data-theme='dark'] .confirm-dialog h2,
+html[data-theme='dark'] .confirm-dialog h3,
+html[data-theme='dark'] .confirm-dialog h4,
+html[data-theme='dark'] .confirm-dialog h5,
+html[data-theme='dark'] .confirm-dialog h6 {
+  color: var(--bioquest-heading);
+}
+
+/* Login/Register in tema scuro */
+html[data-theme='dark'] .login-page,
+html[data-theme='dark'] .auth-page {
+  background-color: var(--bioquest-bg);
+  color: var(--bioquest-text);
+}
+
+html[data-theme='dark'] .login-card,
+html[data-theme='dark'] .auth-card {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+html[data-theme='dark'] .login-card h1,
+html[data-theme='dark'] .login-card h2,
+html[data-theme='dark'] .login-card h3,
+html[data-theme='dark'] .auth-card h1,
+html[data-theme='dark'] .auth-card h2,
+html[data-theme='dark'] .auth-card h3 {
+  color: var(--bioquest-heading);
+}
+
+html[data-theme='dark'] .login-card p,
+html[data-theme='dark'] .auth-card p {
+  color: var(--bioquest-text);
+}
+
+/* Feedback visivo per bottoni e controlli interattivi */
+.btn,
+.nav-link,
+button {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.btn:active,
+.nav-link:active,
+button:active {
+  transform: scale(0.98);
+}
+
+.btn-outline-success:active {
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+  color: #ffffff;
+}
+
+html[data-theme='dark'] .btn-outline-success:active {
+  background-color: var(--bioquest-primary-medium);
+  border-color: var(--bioquest-primary-medium);
+  color: #07110d;
+}
+
+.btn-outline-secondary:active {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #ffffff;
+}
+
+.btn-outline-danger:active {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+
+/* Focus visibile per navigazione da tastiera */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(0, 189, 126, 0.45);
+  outline-offset: 3px;
+}
+
+html[data-theme='dark'] a:focus-visible,
+html[data-theme='dark'] button:focus-visible,
+html[data-theme='dark'] input:focus-visible,
+html[data-theme='dark'] select:focus-visible,
+html[data-theme='dark'] textarea:focus-visible,
+html[data-theme='dark'] [tabindex]:focus-visible {
+  outline-color: rgba(0, 217, 145, 0.6);
+}
+
+/* Correzioni mirate tema scuro */
+
+/* Home: testo sotto "La biodiversità del pianeta" */
+html[data-theme='dark'] body #app #intro-title + p,
+html[data-theme='dark'] body #app #intro-title + p strong {
+  color: var(--bioquest-muted);
+}
+
+/* Home: card informative sotto la sezione introduttiva */
+html[data-theme='dark'] body #app .info-card {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+  box-shadow: 0 0.55rem 1.4rem rgba(0, 0, 0, 0.32);
+}
+
+html[data-theme='dark'] body #app .info-card h3 {
+  color: var(--bioquest-heading);
+}
+
+html[data-theme='dark'] body #app .info-card p {
+  color: var(--bioquest-muted);
+}
+
+html[data-theme='dark'] body #app .info-icon {
+  color: var(--bioquest-primary-medium);
+  background-color: var(--bioquest-surface-muted);
+  border-color: var(--bioquest-border-strong);
+}
+
+/* Profilo: card preferiti salvati e avvistamenti salvati */
+html[data-theme='dark'] body #app .favorite-card,
+html[data-theme='dark'] body #app .favorite-card .card-body,
+html[data-theme='dark'] body #app .favorite-card .card-footer {
+  background-color: var(--bioquest-surface);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+html[data-theme='dark'] body #app .favorite-card-title {
+  color: var(--bioquest-heading);
+}
+
+html[data-theme='dark'] body #app .scientific-name {
+  color: var(--bioquest-muted);
+}
+
+html[data-theme='dark'] body #app .favorite-image-placeholder {
+  background-color: var(--bioquest-surface-muted);
+  color: var(--bioquest-primary-medium);
+}
+
+html[data-theme='dark'] body #app .observation-info,
+html[data-theme='dark'] body #app .note-preview {
+  background-color: var(--bioquest-surface-soft);
+  color: var(--bioquest-text);
+  border-color: var(--bioquest-border);
+}
+
+html[data-theme='dark'] body #app .note-preview.empty {
+  background-color: var(--bioquest-surface-soft);
+  color: var(--bioquest-muted);
+}
+
+/* Profilo: testi secondari ancora troppo scuri */
+html[data-theme='dark'] body #app .profile-page .text-muted,
+html[data-theme='dark'] body #app .profile-page small,
+html[data-theme='dark'] body #app .profile-page .settings-main p {
+  color: var(--bioquest-muted);
+}
+
+/* Login/Register: label e link secondari più leggibili */
+html[data-theme='dark'] body #app .login-card label,
+html[data-theme='dark'] body #app .auth-card label,
+html[data-theme='dark'] body #app .login-card .form-label,
+html[data-theme='dark'] body #app .auth-card .form-label {
+  color: var(--bioquest-primary-medium);
+}
+
+html[data-theme='dark'] body #app .login-card a,
+html[data-theme='dark'] body #app .auth-card a,
+html[data-theme='dark'] body #app .login-card button.btn-link,
+html[data-theme='dark'] body #app .auth-card button.btn-link {
+  color: var(--bioquest-primary-medium);
+}
+
+html[data-theme='dark'] body #app .login-card a:hover,
+html[data-theme='dark'] body #app .auth-card a:hover,
+html[data-theme='dark'] body #app .login-card button.btn-link:hover,
+html[data-theme='dark'] body #app .auth-card button.btn-link:hover {
+  color: var(--bioquest-primary);
 }

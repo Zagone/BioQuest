@@ -1,7 +1,8 @@
 {
   "name": "bioquest",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Applicazione Vue per esplorare specie animali, osservazioni GBIF, preferiti e note personali.",
   "type": "module",
   "scripts": {
     "dev": "vite",

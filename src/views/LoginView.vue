@@ -1,15 +1,20 @@
-<!-- Login e registrazione simulati: controllano solo l'esistenza dello username su Firestore con supporto ARIA -->
+<!-- Login e registrazione simulati con username e password su Firestore -->
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { db } from '../firebase'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
+import AppNavbar from '../components/AppNavbar.vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const username = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const isRegisterMode = ref(false)
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const message = ref('')
 const messageType = ref('info')
 
@@ -21,115 +26,144 @@ function createDisplayName(value) {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-// Pulisce gli stati temporanei salvati durante la navigazione
+function getRedirectPath() {
+  const redirect = route.query.redirect
+
+  if (typeof redirect === 'string' && redirect.startsWith('/')) {
+    return redirect
+  }
+
+  return '/home'
+}
+
 function clearNavigationState() {
   sessionStorage.removeItem('bioquestHomeState')
   sessionStorage.removeItem('bioquestMapState')
   sessionStorage.removeItem('bioquestSelectedObservation')
 }
 
+function showMessage(type, text) {
+  messageType.value = type
+  message.value = text
+}
+
 function toggleMode() {
   isRegisterMode.value = !isRegisterMode.value
   message.value = ''
+  password.value = ''
+  confirmPassword.value = ''
+  showPassword.value = false
+  showConfirmPassword.value = false
 }
 
 async function login() {
   const cleanUsername = normalizeUsername(username.value)
 
-  if (!cleanUsername) {
-    messageType.value = 'danger'
-    message.value = 'Inserisci uno username'
+  if (!cleanUsername || !password.value) {
+    showMessage('danger', 'Inserisci username e password.')
     return
   }
 
-  const userRef = doc(db, 'users', cleanUsername)
-  const userSnap = await getDoc(userRef)
+  try {
+    const userRef = doc(db, 'users', cleanUsername)
+    const userSnap = await getDoc(userRef)
 
-  if (!userSnap.exists()) {
-    messageType.value = 'danger'
-    message.value = 'Utente non registrato. Registrati prima di accedere.'
-    return
+    if (!userSnap.exists()) {
+      showMessage('danger', 'Utente non registrato.')
+      return
+    }
+
+    const userData = userSnap.data()
+
+    if (userData.password !== password.value) {
+      showMessage('danger', 'Password non corretta.')
+      return
+    }
+
+    clearNavigationState()
+    localStorage.setItem('bioquestUser', cleanUsername)
+    window.dispatchEvent(new Event('bioquest-auth-changed'))
+    router.push(getRedirectPath())
+  } catch (error) {
+    showMessage('danger', 'Errore durante l’accesso. Riprova tra qualche secondo.')
   }
-
-  clearNavigationState()
-  localStorage.setItem('bioquestUser', cleanUsername)
-  router.push('/home')
 }
 
 async function register() {
   const cleanUsername = normalizeUsername(username.value)
-  
-  if (!cleanUsername) {
-    messageType.value = 'danger'
-    message.value = 'Inserisci uno username'
+
+  if (!cleanUsername || !password.value || !confirmPassword.value) {
+    showMessage('danger', 'Compila tutti i campi.')
     return
   }
 
-  const userRef = doc(db, 'users', cleanUsername)
-  const userSnap = await getDoc(userRef)
-
-  if (userSnap.exists()) {
-    messageType.value = 'danger'
-    message.value = 'Username già registrato. Prova ad accedere.'
+  if (password.value !== confirmPassword.value) {
+    showMessage('danger', 'Le password non coincidono.')
     return
   }
 
-  await setDoc(userRef, {
-    username: cleanUsername,
-    displayName: createDisplayName(cleanUsername),
-    createdAt: new Date().toISOString()
-  })
+  try {
+    const userRef = doc(db, 'users', cleanUsername)
+    const userSnap = await getDoc(userRef)
 
-  clearNavigationState()
+    if (userSnap.exists()) {
+      showMessage('danger', 'Username già registrato. Prova ad accedere.')
+      return
+    }
 
-  messageType.value = 'success'
-  message.value = 'Registrazione completata. Ora puoi accedere.'
-  isRegisterMode.value = false
+    await setDoc(userRef, {
+      username: cleanUsername,
+      displayName: createDisplayName(cleanUsername),
+      password: password.value,
+      createdAt: new Date().toISOString()
+    })
+
+    clearNavigationState()
+    localStorage.setItem('bioquestUser', cleanUsername)
+    window.dispatchEvent(new Event('bioquest-auth-changed'))
+    router.push(getRedirectPath())
+  } catch (error) {
+    showMessage('danger', 'Errore durante la registrazione. Riprova tra qualche secondo.')
+  }
 }
+
 </script>
 
 <template>
-  <main class="min-vh-100 d-flex align-items-center bg-light">
+  <main>
+    <AppNavbar />
+
     <section
-      class="container"
+      class="login-page d-flex align-items-center"
       aria-labelledby="login-title"
     >
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-5">
-
-          <div class="card shadow-sm border-0">
-            <div class="card-body p-4 p-md-5">
-
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-5">
+            <div class="login-card">
               <div class="text-center mb-4">
                 <i
-                  class="bi bi-tree"
-                  style="font-size: 3rem;"
+                  class="bi bi-tree-fill login-icon"
                   aria-hidden="true"
                 ></i>
 
                 <h1
                   id="login-title"
-                  class="fw-bold mt-2"
+                  class="fw-bold mt-2 mb-1"
                 >
                   BioQuest
                 </h1>
 
-                <p class="text-muted">
-                  Esplora la biodiversità globale
+                <p class="text-muted mb-0">
+                  Accedi per salvare preferiti e note personali
                 </p>
               </div>
 
-              <h2
-                id="auth-form-title"
-                class="h4 mb-3"
-              >
+              <h2 class="h4 fw-bold mb-3">
                 {{ isRegisterMode ? 'Registrati' : 'Accedi' }}
               </h2>
 
-              <form
-                aria-labelledby="auth-form-title"
-                @submit.prevent="isRegisterMode ? register() : login()"
-              >
+              <form @submit.prevent="isRegisterMode ? register() : login()">
                 <div class="mb-3">
                   <label
                     for="username"
@@ -145,15 +179,7 @@ async function register() {
                     type="text"
                     placeholder="es. lorenzo"
                     autocomplete="username"
-                    aria-describedby="username-help"
                   />
-
-                  <small
-                    id="username-help"
-                    class="text-muted"
-                  >
-                    Inserisci lo username usato per accedere al profilo.
-                  </small>
                 </div>
 
                 <div class="mb-3">
@@ -164,22 +190,63 @@ async function register() {
                     Password
                   </label>
 
-                  <input
-                    id="password"
-                    v-model="password"
-                    class="form-control"
-                    type="password"
-                    placeholder="password qualsiasi"
-                    autocomplete="current-password"
-                    aria-describedby="password-help"
-                  />
+                  <div class="password-field">
+                    <input
+                      id="password"
+                      v-model="password"
+                      class="form-control password-input"
+                      :type="showPassword ? 'text' : 'password'"
+                      placeholder="Inserisci password"
+                      :autocomplete="isRegisterMode ? 'new-password' : 'current-password'"
+                    />
 
-                  <small
-                    id="password-help"
-                    class="text-muted"
+                    <button
+                      class="password-toggle"
+                      type="button"
+                      :aria-label="showPassword ? 'Nascondi password' : 'Mostra password'"
+                      @click="showPassword = !showPassword"
+                    >
+                      <i
+                        :class="showPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  v-if="isRegisterMode"
+                  class="mb-3"
+                >
+                  <label
+                    for="confirm-password"
+                    class="form-label"
                   >
-                    La password non viene controllata: conta solo lo username.
-                  </small>
+                    Conferma password
+                  </label>
+
+                  <div class="password-field">
+                    <input
+                      id="confirm-password"
+                      v-model="confirmPassword"
+                      class="form-control password-input"
+                      :type="showConfirmPassword ? 'text' : 'password'"
+                      placeholder="Ripeti password"
+                      autocomplete="new-password"
+                    />
+
+                    <button
+                      class="password-toggle"
+                      type="button"
+                      :aria-label="showConfirmPassword ? 'Nascondi conferma password' : 'Mostra conferma password'"
+                      @click="showConfirmPassword = !showConfirmPassword"
+                    >
+                      <i
+                        :class="showConfirmPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"
+                        aria-hidden="true"
+                      ></i>
+                    </button>
+                  </div>
                 </div>
 
                 <div
@@ -187,44 +254,102 @@ async function register() {
                   class="alert"
                   :class="`alert-${messageType}`"
                   :role="messageType === 'danger' ? 'alert' : 'status'"
-                  :aria-live="messageType === 'danger' ? 'assertive' : 'polite'"
                 >
                   {{ message }}
                 </div>
 
                 <button
-                  v-if="!isRegisterMode"
-                  class="btn btn-primary w-100 mb-3"
+                  class="btn btn-success w-100"
                   type="submit"
-                  aria-label="Accedi al profilo BioQuest"
                 >
-                  Accedi
-                </button>
-
-                <button
-                  v-else
-                  class="btn btn-success w-100 mb-3"
-                  type="submit"
-                  aria-label="Crea un nuovo profilo BioQuest"
-                >
-                  Crea profilo
+                  {{ isRegisterMode ? 'Crea profilo' : 'Accedi' }}
                 </button>
               </form>
 
               <button
-                class="btn btn-link w-100"
+                class="btn btn-link w-100 mt-3 switch-link"
                 type="button"
-                :aria-label="isRegisterMode ? 'Passa alla modalità di accesso' : 'Passa alla modalità di registrazione'"
                 @click="toggleMode"
               >
-                {{ isRegisterMode ? 'Hai già un profilo? Accedi' : 'Non hai un profilo? Registrati' }}
+                {{
+                  isRegisterMode
+                    ? 'Hai già un profilo? Accedi'
+                    : 'Non hai un profilo? Registrati'
+                }}
               </button>
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
   </main>
 </template>
+
+<style scoped>
+.login-page {
+  min-height: calc(100vh - 64px);
+  background-color: #f8fff8;
+}
+
+.login-card {
+  padding: 2rem;
+  border: 1px solid #d8f3dc;
+  border-radius: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.75rem 1.75rem rgba(27, 67, 50, 0.08);
+}
+
+.login-icon {
+  color: #2d6a4f;
+  font-size: 3rem;
+}
+
+.form-label {
+  color: #1b4332;
+  font-weight: 600;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  color: #52796f;
+  background-color: transparent;
+  transform: translateY(-50%);
+}
+
+.password-toggle:hover {
+  color: #1b4332;
+}
+
+.switch-link {
+  color: #2d6a4f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch-link:hover {
+  color: #1b4332;
+  text-decoration: underline;
+}
+
+@media (max-width: 575px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+}
+</style>

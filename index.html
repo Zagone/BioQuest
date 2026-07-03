@@ -1,11 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="it" data-theme="light" data-theme-preference="system">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bioquest</title>
+    <meta
+      name="description"
+      content="BioQuest è un'app per esplorare specie animali, osservazioni GBIF, preferiti e note personali."
+    />
+    <title>BioQuest</title>
+
+    <script>
+      ;(() => {
+        const savedPreference = localStorage.getItem('bioquestTheme') || 'system'
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+        const activeTheme =
+          savedPreference === 'system'
+            ? prefersDark
+              ? 'dark'
+              : 'light'
+            : savedPreference
+
+        document.documentElement.setAttribute('data-theme', activeTheme)
+        document.documentElement.setAttribute('data-theme-preference', savedPreference)
+      })()
+    </script>
   </head>
+
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
