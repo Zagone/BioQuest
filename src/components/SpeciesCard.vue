@@ -173,4 +173,4 @@ function handleFavoriteClick() {
 :global(html[data-theme='dark']) .species-card:hover {
   box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.36);
 }
-</style>
+</style>  

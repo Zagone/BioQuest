@@ -444,8 +444,10 @@ async function confirmRemoveFavorite() {
 
     await createKingdomChart()
 
+    confirmDialogOpen.value = false
+    favoriteToRemove.value = null
+
     showFeedback('Preferito rimosso correttamente.', 'success')
-    closeRemoveDialog()
   } catch {
     showFeedback('Errore durante la rimozione del preferito.', 'danger')
   } finally {
@@ -1033,7 +1035,7 @@ onBeforeUnmount(() => {
               class="spinner-border spinner-border-sm me-2"
               aria-hidden="true"
             ></span>
-            Elimina
+            Rimuovi
           </button>
         </div>
       </section>
@@ -1057,6 +1059,7 @@ onBeforeUnmount(() => {
 .profile-card,
 .summary-card,
 .favorites-section {
+  overflow: hidden;
   border: 1px solid var(--bioquest-border, rgba(0, 189, 126, 0.16));
   border-radius: 1rem;
   background-color: var(--bioquest-surface, #ffffff);

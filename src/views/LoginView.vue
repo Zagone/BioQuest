@@ -149,8 +149,7 @@ async function register() {
 
                 <h1
                   id="login-title"
-                  class="fw-bold mt-2 mb-1"
-                >
+                  class="fw-bold mt-2 mb-1">
                   BioQuest
                 </h1>
 

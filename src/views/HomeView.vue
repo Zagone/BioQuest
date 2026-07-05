@@ -268,7 +268,7 @@ onBeforeUnmount(() => {
                 id="home-title"
                 class="display-3 fw-bold mb-4 hero-title"
               >
-                Esplora il mondo animale,
+                Esplora il mondo animale
                 <span v-if="formattedUsername">
                   {{ formattedUsername }}
                 </span>
