@@ -343,9 +343,7 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section
-      class="container my-5"      
-    >
+    <section class="container my-5">
       <div
         v-if="message"
         class="alert alert-info"
@@ -361,16 +359,14 @@ onBeforeUnmount(() => {
 
       <div
         v-if="isLoading"
-        class="alert alert-secondary"
+        class="search-status"
         role="status"
         aria-live="polite"
       >
         Ricerca in corso...
       </div>
 
-      <div
-        v-else-if="species.length > 0"
-      >
+      <div v-else-if="species.length > 0">
         <div class="d-flex justify-content-between align-items-start flex-column flex-md-row gap-2 mb-3">
           <div>
             <h2
@@ -631,6 +627,21 @@ onBeforeUnmount(() => {
 
 .search-help {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.search-status {
+  padding: 1rem;
+  border: 1px solid rgba(45, 106, 79, 0.22);
+  border-radius: 0.75rem;
+  color: var(--bioquest-primary-dark, #1b4332);
+  background-color: var(--bioquest-surface, #ffffff);
+  font-weight: 600;
+}
+
+:global(html[data-theme='dark']) .search-status {
+  border-color: rgba(149, 213, 178, 0.35);
+  color: var(--bioquest-text, #d8f3dc);
+  background-color: var(--bioquest-surface, #1b1f1d);
 }
 
 .results-count {
